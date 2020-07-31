@@ -1,5 +1,6 @@
 <div align="center">
 <h1>Champions League of Legends </h1>
+<img height="800" src="./readme/screenshot-1.jpg"></img>
 </div>
 
 ## 🚀 Technologies
@@ -33,6 +34,13 @@ $ yarn ios
 # If you are going to use smartphone 
 $ yarn start or expo start
 ```
+
+## Images
+<div align="center">
+    <img height="800" src="./readme/screenshot-2.jpg"></img>
+    <img height="800" src="./readme/screenshot-3.jpg"></img>
+</div>
+
 
 ## 🤔 How to contribute
 

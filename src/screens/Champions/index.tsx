@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import { View, Text, TextInput, TouchableOpacity, Image, Dimensions, StyleSheet, ScrollView } from 'react-native';
+import { 
+    View, 
+    Text, 
+    TextInput, 
+    Image, 
+    Dimensions, 
+    TouchableOpacity,
+    StyleSheet,
+    ScrollView 
+    } from 'react-native';
 import axios from 'axios';
 
 interface Params {
@@ -42,7 +51,8 @@ const styles = StyleSheet.create({
     textChampionName: {
         fontFamily: 'Mada-Medium',
         color: '#FFFF',
-        fontSize: 24
+        fontSize: 24,
+        marginBottom: 5,
     },
     textChampionDescription: {
         fontFamily: 'Mada-Regular',
@@ -87,10 +97,19 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         width: 300,
     },
+    abilityText: {
+       fontFamily: 'Mada-Regular',
+       fontSize: 20,
+       color: '#FFFFFF',
+       marginLeft: 20,
+       marginBottom: 20,
+    },
 })
 
 const Champions: React.FC = () => {
+    const [isPress, setIsPress] = useState(false);
     const [championName, setChampionName] = useState('Aatrox');
+    const [championTitle, setChampionTitle] = useState('A Espada darkin');
     const [championDescription, setChampionDescription] = useState('');
     const [tags, setTags] = useState(['']);
     const [skins, setSkins] = useState<Params>([''])
@@ -100,40 +119,51 @@ const Champions: React.FC = () => {
     const [infoMagic, setInfoMagic] = useState('');
     const [infoDifficulty, setInfoDifficulty] = useState('');
 
-        async function getChampions() {
-            await axios.get(`https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion/${championName}.json`).then(response => {
-                const data = response.data['data']
+    const [speel, setSpeel] = useState([''])
 
-                const champion = data[championName].name
-                const description = data[championName].blurb
-                const tags = data[championName].tags
-                const skins = data[championName].skins
+    async function getChampions() {
+        await axios.get(`https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion/${championName}.json`).then(response => {
+            const data = response.data['data']
 
-                const championInfoAttack = data[championName].info.attack
-                const championInfoDefense = data[championName].info.defense
-                const championInfoMagic = data[championName].info.magic
-                const championInfoDifficulty = data[championName].info.difficulty
+            const champion = data[championName].name
+            const description = data[championName].lore
+            const title = data[championName].title
+            const tags = data[championName].tags
+            const skins = data[championName].skins
 
-                setChampionName(champion);
-                setChampionDescription(description);
-                setTags(tags)
-                setSkins(skins)
+            const championInfoAttack = data[championName].info.attack
+            const championInfoDefense = data[championName].info.defense
+            const championInfoMagic = data[championName].info.magic
+            const championInfoDifficulty = data[championName].info.difficulty
 
-                setInfoAttack(championInfoAttack);
-                setInfoDefense(championInfoDefense);
-                setInfoMagic(championInfoMagic);
-                setInfoDifficulty(championInfoDifficulty);
+            const ability = data[championName].spells
 
-                console.log(skins)
-            })
-        }
+            setChampionName(champion);
+            setChampionDescription(description);
+            setTags(tags)
+            setSkins(skins)
+            setSpeel(ability)
+            setChampionTitle(title)
 
-        function handleSubmit() {
-            getChampions();
-        }
+            setInfoAttack(championInfoAttack);
+            setInfoDefense(championInfoDefense);
+            setInfoMagic(championInfoMagic);
+            setInfoDifficulty(championInfoDifficulty);
+
+            console.log()
+        })
+    }   
+
+    function handleSubmit() {
+        getChampions()
+    }
+
+    function handlePress() {
+        setIsPress((prevState) => !prevState)
+    }
 
   return (
-      <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#010101' }}>
+      <View style={{ flex: 1,  backgroundColor: '#010101' }}>
           <StatusBar style="light"/>
 
           <View style={{ flexDirection: 'row', }}>
@@ -164,16 +194,27 @@ const Champions: React.FC = () => {
           </View>
           
           <ScrollView style={{ marginTop: 30 , width: width, }}>
+
               <View style={{ alignItems: 'center', justifyContent: 'center', }}>
-                <Text style={styles.textChampionName}>{championName}</Text>
-                <Text numberOfLines = { 4 } ellipsizeMode = 'tail' style={styles.textChampionDescription}>{championDescription}</Text>
+
+                <Text style={styles.textChampionName}>{championName} {championTitle}</Text>
+                <Text numberOfLines = { isPress ? 30 : 3 } ellipsizeMode = 'tail' style={styles.textChampionDescription}>{championDescription}</Text>
+
+                <TouchableOpacity onPress={handlePress}>
+                    <Text style={styles.text}>{isPress ? 'Minimize' : 'Read More' }</Text>
+                </TouchableOpacity>
+
                 <View style={{ flexDirection: 'row', }}>
+
                     <Image style={styles.image} source={{ uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/champion/${championName}.png` }}/>
+
                     <View style={{ flexDirection: 'column' }}>
                         <Text style={styles.textTag}>{tags[0]}</Text>
                         <Text style={[styles.textTag, ]}>{tags[1]}</Text>
                     </View>
+
                 </View>
+
                 <View style={{ flexDirection: 'row', }}>
                     <Text style={styles.textAttack}> Attack: </Text>
                     <Text style={styles.text}>{infoAttack}</Text>
@@ -184,10 +225,13 @@ const Champions: React.FC = () => {
                     <Text style={styles.textDifficulty}> Difficulty: </Text>
                     <Text style={styles.text}>{infoDifficulty}</Text>
                 </View>
+
+            </View>
+
                 <ScrollView horizontal={true}>
-                    {skins.map((item: any) => {
+                    {skins.map((item: any, index: any) => {
                         return (
-                            <View style={{ alignItems: 'center', marginTop: 20, }}> 
+                            <View key={index} style={{ alignItems: 'center', marginTop: 20, }}> 
                                 <Text numberOfLines = { 1 } ellipsizeMode = 'tail' style={styles.skinsName}>{item.name === 'default' ? championName + '' : item.name}</Text>
                                 <Image style={{ 
                                     width: 306, 
@@ -200,8 +244,19 @@ const Champions: React.FC = () => {
                         )
                     })}
                 </ScrollView>
-                
-              </View>
+
+                <ScrollView horizontal={true}>
+                    {speel.map((item: any, index) => {
+                        return (
+                            <View key={index} style={{ flexDirection: "row",  marginLeft: 20, alignItems: 'center' }}>  
+                                <Image style={{ width: 64, height: 64, marginTop: 12, marginBottom: 20 }} source={{
+                                        uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/spell/${item.id}.png` }}/>
+                                <Text style={styles.abilityText}>{item.name}</Text>
+                            </View>
+                        )
+                    })}
+                </ScrollView>
+              
           </ScrollView>
          
       </View>
