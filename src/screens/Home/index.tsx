@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
     image: {
         width: width,
         height: height - 200,
-        borderBottomLeftRadius: 150,
-        borderBottomRightRadius: 150,
+        borderBottomLeftRadius: 100,
+        borderBottomRightRadius: 100,
     },
     text: {
         color: '#FFFFFF',
