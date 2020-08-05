@@ -13,7 +13,7 @@ import {
     SafeAreaView
     } from 'react-native';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 interface Params {
     id: string,
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: 'Mada-Regular',
         fontSize: 17,
-        color: '#FFFF',
+        color: '#010101',
         marginTop: 2,
         marginLeft: 2,
     },
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         borderWidth: 2, 
         height: 47, 
         flexDirection: 'row',
-        marginLeft: 10,
+        marginLeft: 5,
     },
     image: {
         width: 120, 
@@ -53,19 +53,19 @@ const styles = StyleSheet.create({
     },
     textChampionName: {
         fontFamily: 'Mada-Medium',
-        color: '#FFFF',
+        color: '#010101',
         fontSize: 24,
         marginBottom: 5,
     },
     textChampionDescription: {
         fontFamily: 'Mada-Regular',
         fontSize: 17,
-        color: '#FFFF',
+        color: '#010101',
         textAlign: 'left',
         marginLeft: 21,
     },
     textAttack: {
-        color: '#d13639',
+        color: 'red',
         fontFamily: 'Mada-Regular',
         fontSize: 18
     },
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     },
     textTag: {
         fontFamily: 'Mada-Bold',
-        color: '#FFFF',
+        color: '#010101',
         fontSize: 35,
         marginTop: 20,
         marginLeft: 20,
@@ -97,14 +97,14 @@ const styles = StyleSheet.create({
     skinsName: {
         fontFamily: 'Mada-Medium',
         fontSize: 18,
-        color: '#FFFFFF',
+        color: '#010101',
         width: 300,
         marginLeft: 40,
     },
     abilityText: {
        fontFamily: 'Mada-Regular',
        fontSize: 18,
-       color: '#FFFFFF',
+       color: '#010101',
        marginLeft: 10,
        marginBottom: 20,
        marginRight: 10,
@@ -112,8 +112,15 @@ const styles = StyleSheet.create({
 })
 
 const SearchEspecificChampions: React.FC = () => {
+    const navigation = useNavigation();
+    const route = useRoute();
+
+    const { name } = route.params as any
+
+    const [data, setData] = useState([])
+
     const [isPress, setIsPress] = useState(false);
-    const [championName, setChampionName] = useState('Aatrox');
+    const [championName, setChampionName] = useState(name);
     const [championTitle, setChampionTitle] = useState('A Espada darkin');
     const [championDescription, setChampionDescription] = useState('');
     const [tags, setTags] = useState(['']);
@@ -124,9 +131,7 @@ const SearchEspecificChampions: React.FC = () => {
     const [infoMagic, setInfoMagic] = useState('');
     const [infoDifficulty, setInfoDifficulty] = useState('');
 
-    const [speel, setSpeel] = useState([''])
-
-    const navigation = useNavigation()
+    const [speel, setSpeel] = useState(['']);
 
     async function getChampions() {
         await axios.get(`https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion/${championName}.json`).then(response => {
@@ -159,7 +164,9 @@ const SearchEspecificChampions: React.FC = () => {
 
             console.log()
         })
-    }   
+    }  
+            
+ 
 
     function handleSubmit() {
         getChampions()
@@ -173,40 +180,48 @@ const SearchEspecificChampions: React.FC = () => {
        navigation.goBack();
     }
 
-  return (
-      <SafeAreaView style={{ flex: 1,  backgroundColor: '#6A6180', paddingTop: 20,  }}>
-          <StatusBar style="light"/>
-        
-        <TouchableOpacity onPress={handleNavigateBack}>
-          <Image style={{ marginTop: 15, marginLeft: 15, }} source={require('../../assets/images/back.png')}/>
-        </TouchableOpacity>
-
-          <View style={{ flexDirection: 'row', }}>
-          <View style={styles.input}>
-                <Ionicons style={{ marginLeft: 25, marginRight: 20, }} name="ios-search" size={28} color="#2D0C57" />
-                <TextInput
-                    placeholder="Search"
-                    value={championName}
-                    onChangeText={setChampionName}  
-                    style={{ color: '#2D0C57', fontSize: 17, }}
-                />
-                
+    if (data === undefined) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0101' }}>
+                <Text>Loading...</Text>
             </View>
-            <View>
+        )
+    }
+
+  return (
+      <SafeAreaView style={{ flex: 1,  backgroundColor: '#0101', paddingTop: 20,  }}>
+          <StatusBar style="dark"/>
+        
+       
+            <View style={{ flexDirection: 'row', justifyContent: 'center', }}>
+                <TouchableOpacity onPress={handleNavigateBack}>
+                    <Image style={{ marginTop: 35, marginLeft: 15, marginRight: 10, }} source={require('../../assets/images/back.png')}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleSubmit} style={styles.input}>
+                    <Ionicons style={{ marginLeft: 25, marginRight: 20, }} name="ios-search" size={28} color="#2D0C57" />
+                    <TextInput
+                        placeholder="Search"
+                        value={championName}
+                        onChangeText={setChampionName}  
+                        style={{ color: '#2D0C57', fontSize: 17, }}
+                    />
+                </TouchableOpacity>
+
                 <TouchableOpacity style={{ 
-                    marginLeft: 20, 
-                    width: 120, 
+                    marginLeft: 10, 
+                    width: 110, 
                     height: 47, 
                     backgroundColor: '#d13639', 
                     borderRadius: 24, 
                     alignItems: 'center', 
                     justifyContent: 'center', 
                     marginTop: 20,
+                    marginRight: 10,
                     }} onPress={handleSubmit} >
                     <Text>Search</Text>
                 </TouchableOpacity>
-                </View>
-          </View>
+                    
+            </View>
           
           <ScrollView style={{ marginTop: 10 , width: width, }}>
 
