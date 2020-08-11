@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
-import { useRoute, useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { RectButton } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { height, width } = Dimensions.get('window');
 
@@ -27,9 +28,9 @@ const Champion: React.FC = () => {
 
   const [isPress, setIsPress] = useState(false);
 
-  useFocusEffect(() => {
+  useEffect(() => {
     async function getEspecificChampion() {
-      await axios.get(`https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion/${name}.json`).then(response => {
+      await axios.get(`https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion/${name}.json`).then((response: any) => {
           const data = response.data['data']
           const Name = data[name].name
           const title = data[name].title
@@ -48,7 +49,7 @@ const Champion: React.FC = () => {
       })
     } 
     getEspecificChampion()
-  })
+  },[])
 
   function handlePress() {
     setIsPress((prevState) => !prevState)
@@ -73,7 +74,7 @@ const Champion: React.FC = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent/>
-      <ScrollView style={{ backgroundColor: '#010101' }}>
+      <ScrollView style={{ backgroundColor: 'rgba(0, 0, 1, 0.9)' }}>
         <Image style={styles.championImage} source={{ uri: `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championId}_0.jpg` }}/>
         <View style={styles.textContainer}>
           <Text style={styles.championName}>{championName}</Text>
@@ -88,11 +89,11 @@ const Champion: React.FC = () => {
         </View>  
         <RectButton onPress={() => handleNavigateToAbilitys(speels)} style={{ alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row', marginBottom: 20, }}>
           <Text style={styles.championDescription}>Ver Habilidades</Text>
-          <AntDesign name="arrowright" size={24} color="#F0F2A6" />
+          <AntDesign name="arrowright" size={24} color="#FCA311" />
         </RectButton>  
         <RectButton onPress={() => handleNavigateToSkins(skins, name)} style={{ alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row', marginBottom: 20, }}>
           <Text style={styles.championDescription}>Ver Skins</Text>
-          <AntDesign name="arrowright" size={24} color="#F0F2A6" />
+          <AntDesign name="arrowright" size={24} color="#FCA311" />
         </RectButton> 
       </ScrollView>
     </View>
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#010101'
+    backgroundColor: 'rgba(0, 0, 1, 0.9)'
   },
 
   textContainer: {
@@ -127,21 +128,21 @@ const styles = StyleSheet.create({
     letterSpacing: 5,
     fontSize: 50,
     lineHeight: 60,
-    color: '#F0F2A6'
+    color: '#FCA311'
   },
 
   championDescription: {
     fontFamily: 'Mada-Regular',
     fontSize: 25,
     lineHeight: 35,
-    color: '#F0F2A6'
+    color: '#FCA311'
   },
 
   championLore: {
     textAlign: 'left',
     fontFamily: 'Mada-Regular',
     fontSize: 16,
-    color: '#F0F2A6',
+    color: '#FCA311',
     paddingHorizontal: 20,
   },
 

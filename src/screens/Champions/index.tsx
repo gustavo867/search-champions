@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { ScrollView, RectButton } from 'react-native-gesture-handler';
+import { RectButton, FlatList } from 'react-native-gesture-handler';
 import axios from 'axios';
+import { LinearGradient } from 'expo-linear-gradient';
 
-// Mudança de interface
 interface Item {
   name: string,
   blurb: string,
@@ -21,7 +21,7 @@ const Champions: React.FC = () => {
   function handleNavigateToChampions(name: string) {
       navigation.navigate('Champion', { name });
   }
-  useFocusEffect(() => {
+  useEffect(() => {
     async function getChampions() {
       await axios.get('https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion.json').then(response => {
           const data = Object.values(response.data.data)
@@ -29,8 +29,7 @@ const Champions: React.FC = () => {
       })
     }
     getChampions()
-  },)
-
+  },[])
 
   if (data.map === undefined) {
     return (
@@ -40,28 +39,35 @@ const Champions: React.FC = () => {
     )
   }
 
-  return (
-    <View style={{ backgroundColor: '#0101', justifyContent: 'center', alignItems: 'center', flex: 1, }}>
 
-      <ScrollView style={{ marginTop: 40, }} decelerationRate="fast" showsVerticalScrollIndicator={false}>
-        {data.map((item : Item)  => {
-          return (
-            <RectButton onPress={() => handleNavigateToChampions(item.id)} key={item.key} style={styles.championCard}>     
-             <View style={{ flexDirection: 'row', }}>
-                <Text style={[styles.championName, { marginLeft: 10, marginTop: 10, }]}>{item.name}</Text>
-                <Text style={[styles.championName, { marginLeft: 5, marginTop: 10, }]}>{item.title}</Text>
-              </View>
-              <View style={{ flexDirection: 'row', marginTop: 20, }}>
-                <TouchableOpacity onPress={() => handleNavigateToChampions(item.id)} activeOpacity={0.7}>
-                  <Image style={styles.championImage} source={{ uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/champion/${item.id}.png` }}/>
-                </TouchableOpacity>        
-              </View>
-            
-            </RectButton>
-          )
-        })}
-      </ScrollView>
-     
+  const Item = (item: any, index: number) => {
+    return (
+      <RectButton onPress={() => handleNavigateToChampions(item.id)} key={index} style={styles.championCard}>     
+          <Text style={[styles.championName, { marginTop: 0, }]}>{item.name}</Text>
+          <TouchableOpacity onPress={() => handleNavigateToChampions(item.id)} activeOpacity={0.7}>
+            <Image style={styles.championImage} source={{ uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/champion/${item.id}.png` }}/>
+          </TouchableOpacity>                 
+      </RectButton>
+    )
+  };
+
+  return (
+    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}>
+      <LinearGradient
+        colors={['rgba(0, 0, 1, 0.7))' , 'rgba(0, 0, 1, 0.9)']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ position: 'absolute', height: '100%' , left: 0, right: 0, top: 0,}}
+      />
+      <FlatList
+        bounces={true}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item: any) => item.key}
+        data={data}
+        renderItem={({ item, index }: any) => <Item {...item} index={index}/>}
+        style={{ marginTop: 40,}}
+        numColumns={2}
+      />
     </View>
   );
 }
@@ -70,22 +76,23 @@ export default Champions;
 
 const styles = StyleSheet.create({
   championCard: {
-    backgroundColor: '#FFF',
-    width: 350,
-    height: 250,
+    width: '40%',
+    height: 150,
     marginBottom: 10,
-    borderRadius: 20,
-    borderColor: 'rgba(0, 0, 0, 0.5)',
-    borderWidth: 0.8,
     elevation: 2,
     shadowColor: 'rgba(0, 0, 0, 0.5)',
     shadowOffset: {
       width: 2,
       height: 2,
-    }
+    },
+    marginRight: 20,
+    flexGrow: 1,
+    flexShrink: 1,
+    alignItems: 'center', 
+    justifyContent: 'center',
   },
   championName: {
-    color: '#010101',
+    color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 18,
     fontFamily: 'Mada-Medium',
     textAlign: 'center',
@@ -93,15 +100,6 @@ const styles = StyleSheet.create({
   championImage: {
     height: 120,
     width: 120,
-    borderRadius: 12,
-    marginLeft: 12,
-  },
-  championDescription: {
-    fontSize: 18,
-    fontFamily: 'Mada-Regular',
-    color: '#010101',
-    textAlign: 'left',
-    width: 150,
-    marginLeft: 15,
+    borderRadius: 120 / 2,
   },
 })

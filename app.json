@@ -4,11 +4,11 @@
     "slug": "league_champs",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/league-of-legends-logo.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/league-of-legends-logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#23929E"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

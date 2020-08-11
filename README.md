@@ -1,6 +1,6 @@
 <div align="center">
 <h1>Champions League of Legends </h1>
-<img height="800" src="./readme/screenshot-1.jpg"></img>
+<img height="800" src="./readme/Screenshot_25.png"></img>
 </div>
 
 ## 🚀 Technologies
@@ -35,12 +35,21 @@ $ yarn ios
 $ yarn start or expo start
 ```
 
-## Images
+## Champion
 <div align="center">
-    <img height="800" src="./readme/screenshot-2.jpg"></img>
-    <img height="800" src="./readme/screenshot-3.jpg"></img>
+    <img height="800" src="./readme/Screenshot_26.png"></img>
+    <img height="800" src="./readme/Screenshot_27.png"></img>
 </div>
 
+##  Skins
+<div align="center">
+    <img height="800" src="./readme/Screenshot_29.png"></img>
+</div>
+
+## Abilitys
+<div align="center">
+    <img height="800" src="./readme/Screenshot_28.png"></img>
+</div>
 
 ## 🤔 How to contribute
 
