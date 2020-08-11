@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { ScrollView, RectButton } from 'react-native-gesture-handler';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
 
+// Mudança de interface
 interface Item {
   name: string,
   blurb: string,
@@ -11,6 +12,61 @@ interface Item {
   id: string,
   title: string,
 }
+
+const Champions: React.FC = () => {
+  const navigation = useNavigation();
+
+  const [data, setData] = useState<any>({});
+
+  function handleNavigateToChampions(name: string) {
+      navigation.navigate('Champion', { name });
+  }
+  useFocusEffect(() => {
+    async function getChampions() {
+      await axios.get('https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion.json').then(response => {
+          const data = Object.values(response.data.data)
+          setData(data)
+      })
+    }
+    getChampions()
+  },)
+
+
+  if (data.map === undefined) {
+    return (
+      <View style={{ backgroundColor: '#0101', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <Text style={{ fontFamily: 'Mada-Bold', fontSize: 50, color: '#010101' }}>Loading...</Text>
+      </View>
+    )
+  }
+
+  return (
+    <View style={{ backgroundColor: '#0101', justifyContent: 'center', alignItems: 'center', flex: 1, }}>
+
+      <ScrollView style={{ marginTop: 40, }} decelerationRate="fast" showsVerticalScrollIndicator={false}>
+        {data.map((item : Item)  => {
+          return (
+            <RectButton onPress={() => handleNavigateToChampions(item.id)} key={item.key} style={styles.championCard}>     
+             <View style={{ flexDirection: 'row', }}>
+                <Text style={[styles.championName, { marginLeft: 10, marginTop: 10, }]}>{item.name}</Text>
+                <Text style={[styles.championName, { marginLeft: 5, marginTop: 10, }]}>{item.title}</Text>
+              </View>
+              <View style={{ flexDirection: 'row', marginTop: 20, }}>
+                <TouchableOpacity onPress={() => handleNavigateToChampions(item.id)} activeOpacity={0.7}>
+                  <Image style={styles.championImage} source={{ uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/champion/${item.id}.png` }}/>
+                </TouchableOpacity>        
+              </View>
+            
+            </RectButton>
+          )
+        })}
+      </ScrollView>
+     
+    </View>
+  );
+}
+
+export default Champions;
 
 const styles = StyleSheet.create({
   championCard: {
@@ -49,69 +105,3 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
 })
-
-const Champions: React.FC = () => {
-  const navigation = useNavigation();
-
-  const [data, setData] = useState<any>({});
-  const [isPress, setIsPress] = useState(false);
-
-  function handleNavigateToChampions(name: string) {
-      navigation.navigate('SearchEspecificChampions', { name });
-  }
-  useEffect(() => {
-    async function getChampions() {
-      await axios.get('https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion.json').then(response => {
-          const data = Object.values(response.data.data)
-          setData(data)
-      })
-    }
-    getChampions()
-  },[])
-
-  function handlePress() {
-    setIsPress((prevState) => !prevState)
-  }
-
-  if (data.map === undefined) {
-    return (
-      <View style={{ backgroundColor: '#0101', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-        <Text style={{ fontFamily: 'Mada-Bold', fontSize: 50, color: '#010101' }}>Loading...</Text>
-      </View>
-    )
-  }
-
-  return (
-    <View style={{ backgroundColor: '#0101', justifyContent: 'center', alignItems: 'center', flex: 1, }}>
-
-      <ScrollView style={{ marginTop: 40, }} decelerationRate="fast" showsVerticalScrollIndicator={false}>
-        {data.map((item : Item)  => {
-          return (
-            <View key={item.key} style={styles.championCard}>     
-             <View style={{ flexDirection: 'row', }}>
-                <Text style={[styles.championName, { marginLeft: 10, marginTop: 10, }]}>{item.name}</Text>
-                <Text style={[styles.championName, { marginLeft: 5, marginTop: 10, }]}>{item.title}</Text>
-              </View>
-              <View style={{ flexDirection: 'row', marginTop: 20, }}>
-                <TouchableOpacity onPress={() => handleNavigateToChampions(item.id)} activeOpacity={0.7}>
-                  <Image style={styles.championImage} source={{ uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/champion/${item.id}.png` }}/>
-                </TouchableOpacity>
-
-                <View style={{ flexDirection: 'column' }}>
-                  <Text style={styles.championDescription} numberOfLines = { 4 } ellipsizeMode = 'tail' >{item.blurb}</Text>
-                  <TouchableOpacity onPress={() => handleNavigateToChampions(item.id)}>
-                    <Text style={[styles.championDescription, { fontFamily: 'Mada-Medium' }]}>Read more ....</Text>
-                  </TouchableOpacity>
-                </View>        
-              </View>
-            
-            </View>
-          )
-        })}
-      </ScrollView>
-     
-    </View>
-  );
-}
-
-export default Champions;

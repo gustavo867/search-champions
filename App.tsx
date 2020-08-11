@@ -3,7 +3,7 @@ import React from 'react';
 import { useFonts } from 'expo-font';
 import { AppLoading } from 'expo';
 
-import Routes from './src/routes';
+import AppStack from './src/routes/AppStack';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -20,7 +20,7 @@ export default function App() {
   return (
     <>
       <StatusBar style="dark"/>
-      <Routes/>
+      <AppStack/>
     </>
   );
 }
