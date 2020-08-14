@@ -38,7 +38,10 @@ const Skins: React.FC = () => {
     <View style={{ flex: 1, backgroundColor: "#010101" }}>
       <StatusBar style="light"/>
       <FlatList
+        initialScrollIndex={1}
+        decelerationRate="fast"
         snapToInterval={width}
+        pagingEnabled={true}
         bounces={true}
         horizontal={true}
         keyExtractor={(item: ItemProps) => item.name}

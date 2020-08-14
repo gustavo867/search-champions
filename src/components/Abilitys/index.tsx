@@ -33,7 +33,7 @@ const Abilitys: React.FC = () => {
                 uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/spell/${item.id}.png` }}/>
         <View style={{ marginBottom: 10, alignItems: 'center', justifyContent: 'center', }}>
           <Text style={[styles.championDescription, { marginTop: 10, marginBottom: 10,}]}>{item.name}</Text>
-        <Text style={[styles.championDescription, { paddingLeft: 20, marginTop: 5, marginBottom: 5, }]}>{item.id}: {' '}{item.description}</Text>
+        <Text style={[styles.championDescription, { paddingLeft: 20, marginTop: 5, marginBottom: 5, width: 350, }]}>{item.id}: {' '}{item.description}</Text>
         </View>       
       </View>
     )

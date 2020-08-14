@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "league_champs",
+    "name": "League Champs",
     "slug": "league_champs",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/league-of-legends-logo.png",
     "splash": {
-      "image": "./assets/league-of-legends-logo.png",
+      "image": "./assets/splash.jpg",
       "resizeMode": "contain",
-      "backgroundColor": "#23929E"
+      "backgroundColor": "#034550"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,6 +21,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "android": {
+      "package": "com.gustavo867.league_champs"
     }
   }
 }
