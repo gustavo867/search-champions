@@ -25,7 +25,7 @@ const Skins: React.FC = () => {
   const Item = (item: ItemProps, index: any) => {
     return (
       <View key={index} style={{ alignItems: 'center', justifyContent: 'center', }}> 
-        <Image style={{ 
+        <Image resizeMode="contain" style={{ 
           width: width, 
           height: height * 1.2, 
         }} source={{ uri: `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${name}_${item.num}.jpg` }}/>

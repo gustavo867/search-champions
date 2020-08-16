@@ -75,7 +75,7 @@ const Champion: React.FC = () => {
     <View style={styles.container}>
       <StatusBar style="light" translucent/>
       <ScrollView style={{ backgroundColor: 'rgba(0, 0, 1, 0.9)' }}>
-        <Image style={styles.championImage} source={{ uri: `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championId}_0.jpg` }}/>
+        <Image style={styles.championImage} resizeMode="cover" source={{ uri: `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championId}_0.jpg` }}/>
         <View style={styles.textContainer}>
           <Text style={styles.championName}>{championName}</Text>
           <Text style={styles.championDescription}>{championTitle}</Text>    

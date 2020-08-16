@@ -6,9 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/league-of-legends-logo.png",
     "splash": {
-      "image": "./assets/splash.jpg",
+      "image": "./assets/riot-games-new-logo.jpg",
       "resizeMode": "contain",
-      "backgroundColor": "#034550"
+      "backgroundColor": "#D13638"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
