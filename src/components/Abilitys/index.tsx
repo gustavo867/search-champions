@@ -3,6 +3,7 @@ import { View, Text, Image, ScrollView, StyleSheet, Dimensions, SafeAreaView } f
 import { useRoute } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
+import HTMLView from 'react-native-htmlview';
 
 const { width, height } = Dimensions.get('window');
 
@@ -18,6 +19,7 @@ const Abilitys: React.FC = () => {
 
   const { abilitys } = route.params as any
 
+  
   if (abilitys === undefined) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#010101' }}>
@@ -27,13 +29,17 @@ const Abilitys: React.FC = () => {
   }
 
   const Item = (item: ItemProps, index: number) => {
+    const htmlContent = `<p>${item.description}</p>`
     return (
       <View key={index} style={{ flexDirection: "column", alignItems: 'center', paddingTop: 20, justifyContent: 'center', }}>  
         <Image style={styles.image} source={{
                 uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/spell/${item.id}.png` }}/>
         <View style={{ marginBottom: 10, alignItems: 'center', justifyContent: 'center', }}>
           <Text style={[styles.championDescription, { marginTop: 10, marginBottom: 10,}]}>{item.name}</Text>
-        <Text style={[styles.championDescription, { paddingLeft: 20, marginTop: 5, marginBottom: 5, width: 350, }]}>{item.id}: {' '}{item.description}</Text>
+          <HTMLView
+            value={htmlContent}
+            stylesheet={styles}
+          />
         </View>       
       </View>
     )
@@ -59,7 +65,24 @@ const Abilitys: React.FC = () => {
 
 export default Abilitys;
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({  
+  p: {
+    fontFamily: 'Mada-Regular',
+    fontSize: 17,
+    lineHeight: 30,
+    color: '#FCA311',
+    textAlign: 'left',
+    width: width,
+    padding: 20,
+  },
+  
+  font: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontFamily: 'Mada-Bold',
+    fontSize: 17,
+    lineHeight: 35,
+  },
+
   container: {
     flex: 1,
     paddingTop: 20,

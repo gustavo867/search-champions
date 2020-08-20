@@ -5,6 +5,7 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { RectButton } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
+import HTMLView from 'react-native-htmlview';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { height, width } = Dimensions.get('window');
@@ -71,6 +72,8 @@ const Champion: React.FC = () => {
     )
   }
 
+  const htmlContent = `<p>${lore}</p>`
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent/>
@@ -82,7 +85,10 @@ const Champion: React.FC = () => {
         </View>     
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Text style={[styles.championName, { letterSpacing: 2, }]}>Biografia</Text> 
-          <Text numberOfLines = { isPress ? 30 : 3 } ellipsizeMode = 'tail' style={styles.championLore}>{lore}</Text>
+          <HTMLView
+            value={htmlContent}
+            stylesheet={styles}
+          />
           <TouchableOpacity onPress={handlePress}>
             <Text style={[styles.championLore, { marginBottom: 15, marginTop: 10, }]}>{isPress ? 'Minimizar' : 'Ler Mais' }</Text>
           </TouchableOpacity>
@@ -108,6 +114,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 0, 1, 0.9)'
+  },
+
+  p: {
+    fontFamily: 'Mada-Regular',
+    fontSize: 17,
+    lineHeight: 30,
+    color: '#FCA311',
+    textAlign: 'left',
+    padding: 20,
+  },
+  
+  font: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontFamily: 'Mada-Bold',
+    fontSize: 17,
+    lineHeight: 35,
   },
 
   textContainer: {
