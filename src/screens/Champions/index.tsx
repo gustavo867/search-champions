@@ -39,7 +39,6 @@ const Champions: React.FC = () => {
     )
   }
 
-
   const Item = (item: any, index: number) => {
     return (
       <RectButton onPress={() => handleNavigateToChampions(item.id)} key={index} style={styles.championCard}>     
@@ -54,7 +53,7 @@ const Champions: React.FC = () => {
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}>
       <LinearGradient
-        colors={['rgba(0, 0, 1, 0.7))' , 'rgba(0, 0, 1, 0.9)']}
+        colors={['rgba(209, 54, 56, 0.5)' , 'rgba(0, 0, 1, 0.7)']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{ position: 'absolute', height: '100%' , left: 0, right: 0, top: 0,}}

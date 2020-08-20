@@ -27,8 +27,6 @@ const Champion: React.FC = () => {
   const [speels, setSpeels] = useState([''])
   const [skins, setSkins] = useState([])
 
-  const [isPress, setIsPress] = useState(false);
-
   useEffect(() => {
     async function getEspecificChampion() {
       await axios.get(`https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion/${name}.json`).then((response: any) => {
@@ -52,9 +50,6 @@ const Champion: React.FC = () => {
     getEspecificChampion()
   },[])
 
-  function handlePress() {
-    setIsPress((prevState) => !prevState)
-  } 
 
   function handleNavigateToAbilitys(abilitys: Object) {
     navigate('Abilitys', { abilitys })
@@ -77,7 +72,11 @@ const Champion: React.FC = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent/>
-      <ScrollView style={{ backgroundColor: 'rgba(0, 0, 1, 0.9)' }}>
+      <LinearGradient
+        colors={['rgba(209, 54, 56, 0.5)' , 'rgba(0, 0, 1, 0.9)']}
+        style={{ position: 'absolute', height: height * 1.2, left: 0, right: 0, top: 0, flex: 1,}}
+      />
+      <ScrollView>
         <Image style={styles.championImage} resizeMode="cover" source={{ uri: `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championId}_0.jpg` }}/>
         <View style={styles.textContainer}>
           <Text style={styles.championName}>{championName}</Text>
@@ -89,9 +88,6 @@ const Champion: React.FC = () => {
             value={htmlContent}
             stylesheet={styles}
           />
-          <TouchableOpacity onPress={handlePress}>
-            <Text style={[styles.championLore, { marginBottom: 15, marginTop: 10, }]}>{isPress ? 'Minimizar' : 'Ler Mais' }</Text>
-          </TouchableOpacity>
         </View>  
         <RectButton onPress={() => handleNavigateToAbilitys(speels)} style={{ alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row', marginBottom: 20, }}>
           <Text style={styles.championDescription}>Ver Habilidades</Text>

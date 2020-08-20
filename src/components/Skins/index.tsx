@@ -3,6 +3,7 @@ import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { FlatList } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface SkinsProps {
   skin: any;
@@ -42,7 +43,7 @@ const Skins: React.FC = () => {
         decelerationRate="fast"
         snapToInterval={width}
         pagingEnabled={true}
-        bounces={true}
+        bounces={false}
         horizontal={true}
         keyExtractor={(item: ItemProps) => item.name}
         data={skin}

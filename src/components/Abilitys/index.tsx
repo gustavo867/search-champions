@@ -48,7 +48,7 @@ const Abilitys: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
-        colors={['rgba(0, 0, 1, 0.7))' , 'rgba(0, 0, 1, 0.9)']}
+        colors={['rgba(209, 54, 56, 0.5)' , 'rgba(0, 0, 1, 1)']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{ position: 'absolute', height: height * 2, left: 0, right: 0, top: 0, flex: 1,}}
@@ -70,14 +70,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Mada-Regular',
     fontSize: 17,
     lineHeight: 30,
-    color: '#FCA311',
+    color: '#FCF7F8',
     textAlign: 'left',
     width: width,
     padding: 20,
   },
   
   font: {
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: '#CCC',
     fontFamily: 'Mada-Bold',
     fontSize: 17,
     lineHeight: 35,
@@ -93,14 +93,14 @@ const styles = StyleSheet.create({
     letterSpacing: 5,
     fontSize: 50,
     lineHeight: 60,
-    color: '#FCA311'
+    color: '#FCF7F8'
   },
 
   championDescription: {
     fontFamily: 'Mada-Regular',
     fontSize: 17,
     lineHeight: 35,
-    color: '#FCA311',
+    color: '#FCF7F8',
     textAlign: 'left'
   },
 
