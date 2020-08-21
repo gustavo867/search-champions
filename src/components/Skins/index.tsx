@@ -22,15 +22,19 @@ const Skins: React.FC = () => {
 
   const { skin, name, } = route.params as SkinsProps
 
-
   const Item = (item: ItemProps, index: any) => {
     return (
-      <View key={index} style={{ alignItems: 'center', justifyContent: 'center', }}> 
-        <Image resizeMode="contain" style={{ 
-          width: width, 
-          height: height * 1.2, 
-        }} source={{ uri: `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${name}_${item.num}.jpg` }}/>
-        <Text style={styles.skinsName}>{item.name === 'default' ? name + '' : item.name}</Text>
+      <View style={{ alignItems: 'center' }}>
+        <Text style={styles.skinLenght}>
+          {item.name === 'default' ? '' : `Skins: ${skin.length - 1}` }
+        </Text>
+        <View key={index} style={{ alignItems: 'center', justifyContent: 'center' }}> 
+          <Image resizeMode="contain" style={{ 
+            width: width, 
+            height: height * 1.2
+          }} source={{ uri: `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${name}_${item.num}.jpg` }}/>
+          <Text style={styles.skinsName}>{item.name === 'default' ? name + '' : item.name}</Text>
+        </View>
       </View>
     )
   };
@@ -57,12 +61,24 @@ export default Skins;
 
 const styles = StyleSheet.create({
   skinsName: {
-    fontFamily: 'Mada-Medium',
+    fontFamily: 'Mada-Bold',
     fontSize: 25,
     letterSpacing: 2,
-    color: '#FCA311',
+    color: '#5AFF15',
     width: 300,
     position: 'absolute',
     zIndex: 1,
+  },
+
+  skinLenght: {
+    fontFamily: 'Mada-Bold',
+    fontSize: 25,
+    letterSpacing: 2,
+    color: '#5AFF15',
+    width: 300,
+    position: 'absolute',
+    zIndex: 1,
+    marginTop: height * 0.02,
+    textAlign: 'center'
   },
 })

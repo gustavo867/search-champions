@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: width,
-        height: height * 0.65,
+        height: height * 0.6,
         borderBottomLeftRadius: 100,
         borderBottomRightRadius: 100,
     },
@@ -27,14 +27,14 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 35,
         fontFamily: 'Mada-Medium',   
-        marginTop: 40,
+        marginTop: height * 0.05,
         textAlign: 'center',
     },
     button: {
-        marginTop: 40,
+        marginTop: height * 0.05,
         backgroundColor: '#d13639',
-        width: 177,
-        height: 56,
+        width: width * 0.8,
+        height: height * 0.08,
         borderRadius: 18,
         alignItems: 'center',
         justifyContent: 'center',
@@ -56,7 +56,7 @@ const Home: React.FC = () => {
   return (
     <View style={styles.container}>
         <View>
-         <Image style={styles.image} source={require('../../assets/images/riotgames-logo.png')}/>
+         <Image resizeMode="cover" style={styles.image} source={require('../../assets/images/riotgames-logo.png')}/>
         </View>
         <Text style={styles.text}>
             Search 

@@ -91,11 +91,11 @@ const Champion: React.FC = () => {
         </View>  
         <RectButton onPress={() => handleNavigateToAbilitys(speels)} style={{ alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row', marginBottom: 20, }}>
           <Text style={styles.championDescription}>Ver Habilidades</Text>
-          <AntDesign name="arrowright" size={24} color="#FCA311" />
+          <AntDesign name="arrowright" size={24} color="#FCF7F8" />
         </RectButton>  
         <RectButton onPress={() => handleNavigateToSkins(skins, name)} style={{ alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row', marginBottom: 20, }}>
           <Text style={styles.championDescription}>Ver Skins</Text>
-          <AntDesign name="arrowright" size={24} color="#FCA311" />
+          <AntDesign name="arrowright" size={24} color="#FCF7F8" />
         </RectButton> 
       </ScrollView>
     </View>
@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Mada-Regular',
     fontSize: 17,
     lineHeight: 30,
-    color: '#FCA311',
+    color: '#FCF7F8',
     textAlign: 'left',
     padding: 20,
   },
   
   font: {
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: '#CCC',
     fontFamily: 'Mada-Bold',
     fontSize: 17,
     lineHeight: 35,
@@ -146,21 +146,21 @@ const styles = StyleSheet.create({
     letterSpacing: 5,
     fontSize: 50,
     lineHeight: 60,
-    color: '#FCA311'
+    color: '#FCF7F8'
   },
 
   championDescription: {
     fontFamily: 'Mada-Regular',
     fontSize: 25,
     lineHeight: 35,
-    color: '#FCA311'
+    color: '#FCF7F8'
   },
 
   championLore: {
     textAlign: 'left',
     fontFamily: 'Mada-Regular',
     fontSize: 16,
-    color: '#FCA311',
+    color: '#FCF7F8',
     paddingHorizontal: 20,
   },
 

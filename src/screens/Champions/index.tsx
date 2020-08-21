@@ -5,14 +5,6 @@ import { RectButton, FlatList } from 'react-native-gesture-handler';
 import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 
-interface Item {
-  name: string,
-  blurb: string,
-  key: number,
-  id: string,
-  title: string,
-}
-
 const Champions: React.FC = () => {
   const navigation = useNavigation();
 
@@ -33,7 +25,13 @@ const Champions: React.FC = () => {
 
   if (data.map === undefined) {
     return (
-      <View style={{ backgroundColor: '#0101', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <LinearGradient
+          colors={['rgba(209, 54, 56, 0.5)' , 'rgba(0, 0, 1, 0.7)']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{ position: 'absolute', height: '100%' , left: 0, right: 0, top: 0,}}
+        />
         <Text style={{ fontFamily: 'Mada-Bold', fontSize: 50, color: '#010101' }}>Loading...</Text>
       </View>
     )
@@ -81,8 +79,8 @@ const styles = StyleSheet.create({
     elevation: 2,
     shadowColor: 'rgba(0, 0, 0, 0.5)',
     shadowOffset: {
-      width: 2,
-      height: 2,
+      width: 10,
+      height: 4,
     },
     marginRight: 20,
     flexGrow: 1,
