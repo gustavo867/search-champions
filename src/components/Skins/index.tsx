@@ -1,9 +1,17 @@
 import React from "react";
-import { View, Image, Text, StyleSheet, Dimensions } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { FlatList } from "react-native-gesture-handler";
-import { LinearGradient } from "expo-linear-gradient";
+import { AntDesign } from "@expo/vector-icons";
 
 interface SkinsProps {
   skin: any;
@@ -18,6 +26,7 @@ interface ItemProps {
 const { width, height } = Dimensions.get("window");
 
 const Skins: React.FC = () => {
+  const { goBack } = useNavigation();
   const route = useRoute();
 
   const { skin, name } = route.params as SkinsProps;
@@ -28,10 +37,7 @@ const Skins: React.FC = () => {
         <Text style={styles.skinLenght}>
           {item.name === "default" ? "" : `Skins: ${skin.length - 1}`}
         </Text>
-        <View
-          key={index}
-          style={{ alignItems: "center", justifyContent: "center" }}
-        >
+        <View key={index} style={{}}>
           <Image
             resizeMode="contain"
             style={{
@@ -53,6 +59,19 @@ const Skins: React.FC = () => {
   return (
     <View style={{ flex: 1, backgroundColor: "#010101" }}>
       <StatusBar style="light" />
+      {Platform.OS === "ios" && (
+        <TouchableOpacity
+          onPress={() => goBack()}
+          style={{
+            marginTop: height * 0.08,
+            marginLeft: 20,
+            zIndex: 2,
+            position: "absolute",
+          }}
+        >
+          <AntDesign name="back" size={34} color="#C89933" />
+        </TouchableOpacity>
+      )}
       <FlatList
         initialScrollIndex={1}
         decelerationRate="fast"
@@ -72,20 +91,22 @@ export default Skins;
 
 const styles = StyleSheet.create({
   skinsName: {
-    fontFamily: "Mada-Bold",
+    fontFamily: "Mada-Medium",
     fontSize: 25,
     letterSpacing: 2,
-    color: "#5AFF15",
+    color: "#C89933",
     width: 300,
     position: "absolute",
     zIndex: 1,
+    marginTop: height * 0.9,
+    marginLeft: width * 0.08,
   },
 
   skinLenght: {
-    fontFamily: "Mada-Bold",
+    fontFamily: "Mada-Medium",
     fontSize: 25,
     letterSpacing: 2,
-    color: "#5AFF15",
+    color: "#C89933",
     width: 300,
     position: "absolute",
     zIndex: 1,
