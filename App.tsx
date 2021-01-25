@@ -1,7 +1,13 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
+import FlashMessage from "react-native-flash-message";
+
+import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { AppLoading } from "expo";
+
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./src/redux/index";
 
 import AppStack from "./src/routes/AppStack";
 
@@ -18,9 +24,12 @@ export default function App() {
     return <AppLoading />;
   }
   return (
-    <>
-      <StatusBar style="dark" />
-      <AppStack />
-    </>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <StatusBar style="dark" />
+        <AppStack />
+        <FlashMessage position="bottom" />
+      </PersistGate>
+    </Provider>
   );
 }
