@@ -1,33 +1,62 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import React, { memo, useCallback, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { RectButton, FlatList } from "react-native-gesture-handler";
-import axios from "axios";
+import { RectButton, FlatList, TextInput } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
+import { Image } from "react-native-expo-image-cache";
+
+import { useDispatch, useSelector } from "react-redux";
+import { ApplicationState } from "../../redux";
+import {
+  championRequest,
+  currentChampionRequest,
+} from "../../redux/ducks/champions/actions";
+import { showMessage } from "react-native-flash-message";
+import { Champions as IChampions } from "../../redux/ducks/champions/types";
+import { BASE_IMAGE_URL } from "../../services/api";
+
+const { width, height } = Dimensions.get("window");
 
 const Champions: React.FC = () => {
   const { navigate } = useNavigation();
+  const dispatch = useDispatch();
+  const { champions, error, loading } = useSelector(
+    (state: ApplicationState) => state.champions
+  );
+  const [search, setSearch] = useState("");
 
-  const [data, setData] = useState<any>({});
+  const renderItem = ({ item, index }: any) => <Item {...item} index={index} />;
+  const keyExtractor = useCallback((item: any) => item.key, []);
 
   function handleNavigateToChampions(name: string) {
-    navigate("Champion", { name });
-  }
-  useEffect(() => {
-    async function getChampions() {
-      await axios
-        .get(
-          "https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion.json"
-        )
-        .then((response) => {
-          const data = Object.values(response.data.data);
-          setData(data);
-        });
+    try {
+      dispatch(currentChampionRequest(name));
+
+      showMessage({
+        message: "Redirecionando",
+        type: "success",
+        duration: 500,
+      });
+
+      navigate("Champion");
+
+      return;
+    } catch (e) {
+      return;
     }
-    getChampions();
+  }
+
+  useEffect(() => {
+    dispatch(championRequest());
   }, []);
 
-  if (data.map === undefined) {
+  if (loading) {
     return (
       <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
         <LinearGradient
@@ -51,7 +80,16 @@ const Champions: React.FC = () => {
     );
   }
 
-  const Item = (item: any, index: number) => {
+  if (error.hasError) {
+    showMessage({
+      message: "Erro inesperado",
+      type: "danger",
+      duration: 1500,
+    });
+    return <View />;
+  }
+
+  const Item = memo((item: IChampions, index: number) => {
     return (
       <RectButton
         onPress={() => handleNavigateToChampions(item.id)}
@@ -64,20 +102,18 @@ const Champions: React.FC = () => {
         >
           <Image
             style={styles.championImage}
-            source={{
-              uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/champion/${item.id}.png`,
-            }}
+            uri={`${BASE_IMAGE_URL}${item.id}.png`}
           />
         </TouchableOpacity>
         <Text style={[styles.championName, { marginTop: 0 }]}>{item.name}</Text>
       </RectButton>
     );
-  };
+  });
 
   return (
-    <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+    <View style={styles.container}>
       <LinearGradient
-        colors={["rgba(209, 54, 56, 0.5)", "rgba(0, 0, 1, 0.7)"]}
+        colors={["#161616", "#161616"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
@@ -88,13 +124,32 @@ const Champions: React.FC = () => {
           top: 0,
         }}
       />
+      <TextInput
+        style={{
+          width: width * 0.8,
+          alignSelf: "center",
+          height: height * 0.08,
+          backgroundColor: "#AAAAAA",
+          color: "#000",
+          paddingLeft: 20,
+          marginTop: 50,
+          borderRadius: 8,
+        }}
+        value={search}
+        onChangeText={(text) => setSearch(text)}
+        placeholder="Pesquisa pelos campeões"
+        placeholderTextColor="#000"
+      />
       <FlatList
         bounces={true}
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item: any) => item.key}
-        data={data}
-        renderItem={({ item, index }: any) => <Item {...item} index={index} />}
-        style={{ marginTop: 40 }}
+        keyExtractor={keyExtractor}
+        data={champions.filter((item) => {
+          return item.name.toLowerCase().includes(search.toLowerCase());
+        })}
+        maxToRenderPerBatch={10}
+        renderItem={renderItem}
+        style={{ marginTop: 20, flexGrow: 0 }}
         numColumns={2}
       />
     </View>
@@ -104,6 +159,11 @@ const Champions: React.FC = () => {
 export default Champions;
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
   championCard: {
     width: "40%",
     height: 150,
