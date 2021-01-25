@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -9,71 +9,41 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
-import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { RectButton } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import HTMLView from "react-native-htmlview";
 import { LinearGradient } from "expo-linear-gradient";
+import { useSelector } from "react-redux";
+import { ApplicationState } from "../../redux";
 
 const { height, width } = Dimensions.get("window");
 
-interface RouteProps {
-  name: string;
-}
-
 const Champion: React.FC = () => {
   const { navigate, goBack } = useNavigation();
-  const route = useRoute();
-  const { name } = route.params as RouteProps;
+  const { currentChampion: champion, loading } = useSelector(
+    (state: ApplicationState) => state.champions
+  );
 
-  const [data, setData] = useState([]);
-  const [championName, setChampionName] = useState("");
-  const [championTitle, setChampionTitle] = useState("");
-  const [championId, setChampionId] = useState("");
-  const [lore, setLore] = useState("");
-  const [speels, setSpeels] = useState([""]);
-  const [skins, setSkins] = useState([]);
-
-  useEffect(() => {
-    async function getEspecificChampion() {
-      await axios
-        .get(
-          `https://ddragon.leagueoflegends.com/cdn/10.15.1/data/pt_BR/champion/${name}.json`
-        )
-        .then((response: any) => {
-          const data = response.data["data"];
-          const Name = data[name].name;
-          const title = data[name].title;
-          const id = data[name].id;
-          const description = data[name].lore;
-          const ability = data[name].spells;
-          const skins = data[name].skins;
-
-          setChampionName(Name);
-          setData(data);
-          setChampionId(id);
-          setChampionTitle(title);
-          setLore(description);
-          setSpeels(ability);
-          setSkins(skins);
-        });
-    }
-    getEspecificChampion();
-  }, []);
-
-  function handleNavigateToAbilitys(abilitys: Object) {
-    navigate("Abilitys", { abilitys });
+  function handleNavigateToAbilitys() {
+    navigate("Abilitys");
   }
 
-  function handleNavigateToSkins(skin: object, name: string) {
-    navigate("Skins", { skin, name });
+  function handleNavigateToSkins() {
+    navigate("Skins");
   }
 
-  if (data === undefined) {
+  if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#161616",
+        }}
+      >
         <Text
           style={{
             fontFamily: "Mada-Bold",
@@ -89,13 +59,13 @@ const Champion: React.FC = () => {
     );
   }
 
-  const htmlContent = `<p>${lore}</p>`;
+  const htmlContent = `<p>${champion.lore}</p>`;
 
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent />
       <LinearGradient
-        colors={["rgba(209, 54, 56, 0.5)", "rgba(0, 0, 1, 0.9)"]}
+        colors={["#161616", "#161616"]}
         style={{
           position: "absolute",
           height: height * 1.2,
@@ -105,7 +75,24 @@ const Champion: React.FC = () => {
           flex: 1,
         }}
       />
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+        }}
+        style={{
+          flexGrow: 0,
+          width: width,
+        }}
+      >
+        <Image
+          style={styles.championImage}
+          resizeMode="cover"
+          source={{
+            uri: `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg`,
+          }}
+        />
         {Platform.OS === "ios" && (
           <TouchableOpacity
             onPress={() => goBack()}
@@ -119,45 +106,64 @@ const Champion: React.FC = () => {
             <AntDesign name="back" size={34} color="#FFF" />
           </TouchableOpacity>
         )}
-        <Image
-          style={styles.championImage}
-          resizeMode="cover"
-          source={{
-            uri: `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championId}_0.jpg`,
-          }}
-        />
+
         <View style={styles.textContainer}>
-          <Text style={styles.championName}>{championName}</Text>
-          <Text style={styles.championDescription}>{championTitle}</Text>
+          <Text style={styles.championName}>{champion.name}</Text>
+          <Text style={styles.championDescription}>{champion.title}</Text>
         </View>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <Text style={[styles.championName, { letterSpacing: 2 }]}>
+        <View
+          style={{
+            alignItems: "flex-start",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+          }}
+        >
+          <Text
+            style={[
+              styles.championName,
+              {
+                letterSpacing: 1,
+                color: "#D5BA66",
+                fontSize: 30,
+                textTransform: "uppercase",
+              },
+            ]}
+          >
             Biografia
           </Text>
           <HTMLView value={htmlContent} stylesheet={styles} />
         </View>
         <RectButton
-          onPress={() => handleNavigateToAbilitys(speels)}
+          onPress={() => handleNavigateToAbilitys()}
           style={{
             alignItems: "center",
-            justifyContent: "space-around",
+            justifyContent: "space-between",
             flexDirection: "row",
-            marginBottom: 20,
+            marginBottom: 10,
+            width: width,
+            paddingHorizontal: 20,
+            marginTop: 20,
           }}
         >
-          <Text style={styles.championDescription}>Ver Habilidades</Text>
+          <Text style={[styles.championDescription, { textAlign: "left" }]}>
+            Ver Habilidades
+          </Text>
           <AntDesign name="arrowright" size={24} color="#FCF7F8" />
         </RectButton>
         <RectButton
-          onPress={() => handleNavigateToSkins(skins, name)}
+          onPress={() => handleNavigateToSkins()}
           style={{
             alignItems: "center",
-            justifyContent: "space-around",
+            justifyContent: "space-between",
             flexDirection: "row",
             marginBottom: 20,
+            width: width,
+            paddingHorizontal: 20,
           }}
         >
-          <Text style={styles.championDescription}>Ver Skins</Text>
+          <Text style={[styles.championDescription, { textAlign: "left" }]}>
+            Ver Skins
+          </Text>
           <AntDesign name="arrowright" size={24} color="#FCF7F8" />
         </RectButton>
       </ScrollView>
@@ -176,12 +182,11 @@ const styles = StyleSheet.create({
   },
 
   p: {
-    fontFamily: "Mada-Regular",
-    fontSize: 17,
-    lineHeight: 30,
-    color: "#FCF7F8",
+    fontFamily: "Mada-Bold",
+    fontSize: 16,
+    lineHeight: 25,
+    color: "#AAAAAA",
     textAlign: "left",
-    padding: 20,
   },
 
   font: {
@@ -192,11 +197,11 @@ const styles = StyleSheet.create({
   },
 
   textContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    marginTop: height * 0.7,
+    top: 50,
+    right: width * 0.05,
     position: "absolute",
+    alignItems: "flex-end",
+    justifyContent: "center",
   },
 
   button: {
@@ -205,18 +210,20 @@ const styles = StyleSheet.create({
   },
 
   championName: {
-    fontFamily: "Mada-Regular",
+    fontFamily: "Mada-Medium",
     letterSpacing: 5,
     fontSize: 50,
     lineHeight: 60,
     color: "#FCF7F8",
+    textAlign: "right",
   },
 
   championDescription: {
-    fontFamily: "Mada-Regular",
-    fontSize: 25,
-    lineHeight: 35,
+    fontFamily: "Mada-Medium",
+    fontSize: 20,
     color: "#FCF7F8",
+    width: width * 0.5,
+    textAlign: "right",
   },
 
   championLore: {
@@ -229,7 +236,10 @@ const styles = StyleSheet.create({
 
   championImage: {
     zIndex: -1,
-    width: width,
+    width: width * 1.2,
     height: height * 1.1,
+    alignItems: "center",
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
   },
 });

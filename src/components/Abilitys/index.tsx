@@ -9,27 +9,30 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { FlatList } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import HTMLView from "react-native-htmlview";
+import { useSelector } from "react-redux";
+import { ApplicationState } from "../../redux";
+import { SPEEL_IMAGE_URL } from "../../services/api";
+import { Spells, Passive } from "../../redux/ducks/champions/types";
 
 const { width, height } = Dimensions.get("window");
-interface ItemProps {
-  name: string;
-  num: number;
-  id: string;
-  description: string;
-}
+
+type IProps = {
+  item: Spells & Passive;
+  type: "passive" | "default";
+};
 
 const Abilitys: React.FC = () => {
   const { goBack } = useNavigation();
-  const route = useRoute();
+  const { spells: abilitys, passive } = useSelector(
+    (state: ApplicationState) => state.champions.currentChampion
+  );
 
-  const { abilitys } = route.params as any;
-
-  if (abilitys === undefined) {
+  if (!abilitys) {
     return (
       <View
         style={{
@@ -46,11 +49,11 @@ const Abilitys: React.FC = () => {
     );
   }
 
-  const Item = (item: ItemProps, index: number) => {
+  const Item = ({ item, type }: IProps) => {
     const htmlContent = `<p>${item.description}</p>`;
     return (
       <View
-        key={index}
+        key={`item.${item.name}`}
         style={{
           flexDirection: "column",
           alignItems: "center",
@@ -61,7 +64,10 @@ const Abilitys: React.FC = () => {
         <Image
           style={styles.image}
           source={{
-            uri: `https://ddragon.leagueoflegends.com/cdn/10.15.1/img/spell/${item.id}.png`,
+            uri:
+              type === "passive"
+                ? `http://ddragon.leagueoflegends.com/cdn/11.2.1/img/passive/${item.image.full}`
+                : `${SPEEL_IMAGE_URL}${item.id}.png`,
           }}
         />
         <View
@@ -71,12 +77,7 @@ const Abilitys: React.FC = () => {
             justifyContent: "center",
           }}
         >
-          <Text
-            style={[
-              styles.championDescription,
-              { marginTop: 10, marginBottom: 10 },
-            ]}
-          >
+          <Text style={[styles.championDescription, { marginBottom: 10 }]}>
             {item.name}
           </Text>
           <HTMLView value={htmlContent} stylesheet={styles} />
@@ -88,7 +89,7 @@ const Abilitys: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
-        colors={["rgba(209, 54, 56, 0.5)", "rgba(0, 0, 1, 1)"]}
+        colors={["#161616", "#161616"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
@@ -115,9 +116,12 @@ const Abilitys: React.FC = () => {
       )}
       <FlatList
         bounces={true}
-        keyExtractor={(item: ItemProps) => item.id}
-        data={abilitys}
-        renderItem={({ item }: any) => <Item {...item} />}
+        keyExtractor={(item: Spells) => item.id}
+        ListHeaderComponent={() => (
+          <Item item={passive as any} type="passive" />
+        )}
+        data={abilitys as any}
+        renderItem={({ item }: any) => <Item item={item} type="default" />}
       />
     </SafeAreaView>
   );
@@ -131,13 +135,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 30,
     color: "#FCF7F8",
-    textAlign: "left",
-    width: width,
-    padding: 20,
+    textAlign: "center",
+    width: width * 0.9,
   },
 
   font: {
-    color: "#CCC",
+    color: "#AAAAAA",
     fontFamily: "Mada-Bold",
     fontSize: 17,
     lineHeight: 35,
@@ -170,7 +173,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 20,
     borderRadius: 64 / 2,
-    borderColor: "#FCA311",
+    borderColor: "#CAB160",
     borderWidth: 2,
   },
 });
