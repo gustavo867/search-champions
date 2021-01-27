@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   Dimensions,
   ScrollView,
   TouchableOpacity,
   Platform,
+  ActivityIndicator,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
@@ -34,7 +35,14 @@ const Champion: React.FC = () => {
     navigate("Skins");
   }
 
-  if (loading) {
+  const uri = useMemo(() => {
+    Image.prefetch(
+      `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg`
+    );
+    return `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg`;
+  }, [champion.id]);
+
+  if (loading || !uri || !champion.id) {
     return (
       <View
         style={{
@@ -50,11 +58,12 @@ const Champion: React.FC = () => {
             fontSize: 45,
             lineHeight: 55,
             letterSpacing: 2,
-            color: "#000",
+            color: "#FFFF",
           }}
         >
           Loading ....
         </Text>
+        <ActivityIndicator size="large" color="#FFFF" />
       </View>
     );
   }
@@ -87,11 +96,14 @@ const Champion: React.FC = () => {
         }}
       >
         <Image
-          style={styles.championImage}
-          resizeMode="cover"
-          source={{
-            uri: `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg`,
-          }}
+          style={[
+            styles.championImage,
+            {
+              resizeMode: "cover",
+            },
+          ]}
+          resizeMethod="resize"
+          source={{ uri: uri }}
         />
         {Platform.OS === "ios" && (
           <TouchableOpacity

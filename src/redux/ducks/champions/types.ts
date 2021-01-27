@@ -19,6 +19,7 @@ export type Skins = {
   id: string;
   name: string;
   chromas: boolean;
+  num: number;
 };
 
 export type Spells = {

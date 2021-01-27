@@ -1,66 +1,47 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   Dimensions,
+  ActivityIndicator,
+  FlatList,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { RectButton, FlatList, TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
-import { Image } from "react-native-expo-image-cache";
 
 import { useDispatch, useSelector } from "react-redux";
 import { ApplicationState } from "../../redux";
-import {
-  championRequest,
-  currentChampionRequest,
-} from "../../redux/ducks/champions/actions";
+import { championRequest } from "../../redux/ducks/champions/actions";
 import { showMessage } from "react-native-flash-message";
-import { Champions as IChampions } from "../../redux/ducks/champions/types";
-import { BASE_IMAGE_URL } from "../../services/api";
+import Item from "./Item";
 
 const { width, height } = Dimensions.get("window");
 
 const Champions: React.FC = () => {
-  const { navigate } = useNavigation();
   const dispatch = useDispatch();
   const { champions, error, loading } = useSelector(
     (state: ApplicationState) => state.champions
   );
   const [search, setSearch] = useState("");
 
-  const renderItem = ({ item, index }: any) => <Item {...item} index={index} />;
+  const renderItem = useCallback(
+    ({ item, index }: any) => <Item item={item} index={index} />,
+    []
+  );
   const keyExtractor = useCallback((item: any) => item.key, []);
-
-  function handleNavigateToChampions(name: string) {
-    try {
-      dispatch(currentChampionRequest(name));
-
-      showMessage({
-        message: "Redirecionando",
-        type: "success",
-        duration: 500,
-      });
-
-      navigate("Champion");
-
-      return;
-    } catch (e) {
-      return;
-    }
-  }
 
   useEffect(() => {
     dispatch(championRequest());
+
+    return () => {};
   }, []);
 
   if (loading) {
     return (
       <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
         <LinearGradient
-          colors={["rgba(209, 54, 56, 0.5)", "rgba(0, 0, 1, 0.7)"]}
+          colors={["#161616", "#161616"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={{
@@ -71,11 +52,10 @@ const Champions: React.FC = () => {
             top: 0,
           }}
         />
-        <Text
-          style={{ fontFamily: "Mada-Bold", fontSize: 50, color: "#010101" }}
-        >
+        <Text style={{ fontFamily: "Mada-Bold", fontSize: 50, color: "#FFFF" }}>
           Loading...
         </Text>
+        <ActivityIndicator size="large" color="#FFFF" />
       </View>
     );
   }
@@ -88,27 +68,6 @@ const Champions: React.FC = () => {
     });
     return <View />;
   }
-
-  const Item = memo((item: IChampions, index: number) => {
-    return (
-      <RectButton
-        onPress={() => handleNavigateToChampions(item.id)}
-        key={index}
-        style={styles.championCard}
-      >
-        <TouchableOpacity
-          onPress={() => handleNavigateToChampions(item.id)}
-          activeOpacity={0.7}
-        >
-          <Image
-            style={styles.championImage}
-            uri={`${BASE_IMAGE_URL}${item.id}.png`}
-          />
-        </TouchableOpacity>
-        <Text style={[styles.championName, { marginTop: 0 }]}>{item.name}</Text>
-      </RectButton>
-    );
-  });
 
   return (
     <View style={styles.container}>
@@ -141,16 +100,18 @@ const Champions: React.FC = () => {
         placeholderTextColor="#000"
       />
       <FlatList
-        bounces={true}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={keyExtractor}
         data={champions.filter((item) => {
           return item.name.toLowerCase().includes(search.toLowerCase());
         })}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={keyExtractor}
         maxToRenderPerBatch={10}
         renderItem={renderItem}
         style={{ marginTop: 20, flexGrow: 0 }}
         numColumns={2}
+        pointerEvents="none"
+        updateCellsBatchingPeriod={8}
+        windowSize={8}
       />
     </View>
   );
@@ -158,7 +119,7 @@ const Champions: React.FC = () => {
 
 export default Champions;
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
