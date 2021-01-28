@@ -1,4 +1,4 @@
-import { showMessage } from "react-native-flash-message";
+import Toast from "react-native-toast-message";
 import { call, put } from "redux-saga/effects";
 import api from "../../../services/api";
 import { championSuccess, currentChampionSucces } from "./actions";
@@ -11,10 +11,14 @@ export function* load() {
     const data = Object.values(response.data.data);
 
     yield put(championSuccess(data as any));
+    Toast.show({
+      text1: "Campeões carregados com sucesso",
+      type: "success",
+    });
   } catch (e) {
-    showMessage({
-      message: "Erro ao buscar champions",
-      type: "danger",
+    Toast.show({
+      text1: "Erro ao buscar champions",
+      type: "error",
     });
   }
 }
@@ -38,9 +42,9 @@ export function* loadChamp({ payload }: { payload: string }) {
 
     yield put(currentChampionSucces(newData as any));
   } catch (e) {
-    showMessage({
-      message: "Erro inesperado",
-      type: "danger",
+    Toast.show({
+      text1: "Erro inesperado",
+      type: "error",
     });
   }
 }

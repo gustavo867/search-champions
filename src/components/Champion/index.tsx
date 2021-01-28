@@ -99,11 +99,12 @@ const Champion: React.FC = () => {
           style={[
             styles.championImage,
             {
-              resizeMode: "cover",
+              backgroundColor: "#161616",
             },
           ]}
           resizeMethod="resize"
-          source={{ uri: uri }}
+          source={{ uri: uri, cache: "force-cache" }}
+          resizeMode="cover"
         />
         {Platform.OS === "ios" && (
           <TouchableOpacity
@@ -248,10 +249,8 @@ const styles = StyleSheet.create({
 
   championImage: {
     zIndex: -1,
-    width: width * 1.2,
-    height: height * 1.1,
+    width: width,
+    height: height * 1.11,
     alignItems: "center",
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
   },
 });

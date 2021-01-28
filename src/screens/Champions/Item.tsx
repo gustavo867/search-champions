@@ -1,14 +1,13 @@
-import React, { memo, useCallback, useEffect, useRef } from "react";
-import { Text, Animated, Dimensions, Easing } from "react-native";
+import React, { memo, useCallback, useEffect, useMemo, useRef } from "react";
+import { Text, Animated, Dimensions, Easing, Image } from "react-native";
 import { Champions as IChampions } from "../../redux/ducks/champions/types";
 import { BASE_IMAGE_URL } from "../../services/api";
 import { RectButton, TouchableOpacity } from "react-native-gesture-handler";
 import { styles } from "./index";
-import { Image } from "react-native-expo-image-cache";
 import { useDispatch } from "react-redux";
 import { currentChampionRequest } from "../../redux/ducks/champions/actions";
-import { showMessage } from "react-native-flash-message";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 const { width } = Dimensions.get("window");
 
@@ -17,6 +16,11 @@ const Item = ({ item, index }: { item: IChampions; index: number }) => {
   const { navigate } = useNavigation();
 
   let translateX = useRef(new Animated.Value(-width)).current;
+
+  const uri = useMemo(() => {
+    Image.prefetch(`${BASE_IMAGE_URL}${item.id}.png`);
+    return `${BASE_IMAGE_URL}${item.id}.png`;
+  }, [item.id]);
 
   const animatingEntry = useCallback(() => {
     if (index % 2 === 1) {
@@ -46,10 +50,9 @@ const Item = ({ item, index }: { item: IChampions; index: number }) => {
     try {
       dispatch(currentChampionRequest(name));
 
-      showMessage({
-        message: "Redirecionando",
+      Toast.show({
+        text1: "Redirecionando",
         type: "success",
-        duration: 500,
       });
 
       navigate("Champion");
@@ -78,7 +81,11 @@ const Item = ({ item, index }: { item: IChampions; index: number }) => {
         >
           <Image
             style={styles.championImage}
-            uri={`${BASE_IMAGE_URL}${item.id}.png`}
+            source={{
+              uri: uri,
+              cache: "force-cache",
+            }}
+            resizeMethod="resize"
           />
         </TouchableOpacity>
         <Text style={[styles.championName, { marginTop: 0 }]}>{item.name}</Text>

@@ -18,7 +18,7 @@ interface ItemProps {
 const { width, height } = Dimensions.get("window");
 
 const Skins: React.FC = () => {
-  const { skins, name } = useSelector(
+  const { skins, id: name } = useSelector(
     (state: ApplicationState) => state.champions.currentChampion
   );
 
@@ -51,6 +51,12 @@ const Skins: React.FC = () => {
     ];
     const outputRange = ["-90deg", "0deg", "90deg"];
 
+    const opacity = xScroll.interpolate({
+      inputRange,
+      outputRange: [0, 1, 0],
+      extrapolate: "clamp",
+    });
+
     const translateX = xScroll.interpolate({
       inputRange,
       outputRange,
@@ -72,10 +78,12 @@ const Skins: React.FC = () => {
             height: 520,
             alignSelf: "center",
             borderRadius: 12,
-            resizeMode: "cover",
+            resizeMode: "contain",
+            opacity,
             transform: [{ rotateZ: translateX }],
           }}
-          resizeMethod="resize"
+          resizeMethod="scale"
+          progressiveRenderingEnabled
           source={{
             uri: uri,
             cache: "force-cache",
@@ -91,13 +99,15 @@ const Skins: React.FC = () => {
   return (
     <View style={{ flex: 1, backgroundColor: "#161616" }}>
       <Animated.FlatList
+        pagingEnabled
+        snapToEnd={false}
         decelerationRate="fast"
-        snapToInterval={width}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
           alignItems: "center",
           justifyContent: "center",
         }}
+        scrollEventThrottle={16}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: xScroll } } }],
           { useNativeDriver: true }
@@ -108,7 +118,6 @@ const Skins: React.FC = () => {
         renderItem={renderItem}
         maxToRenderPerBatch={8}
         pointerEvents="none"
-        scrollEventThrottle={16}
         updateCellsBatchingPeriod={8}
       />
     </View>

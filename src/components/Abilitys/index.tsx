@@ -131,18 +131,18 @@ export default Abilitys;
 
 const styles = StyleSheet.create({
   p: {
-    fontFamily: "Mada-Regular",
-    fontSize: 17,
-    lineHeight: 30,
-    color: "#FCF7F8",
+    fontFamily: "Mada-Bold",
+    fontSize: 16,
+    lineHeight: 25,
+    color: "#AAAAAA",
     textAlign: "center",
     width: width * 0.9,
   },
 
   font: {
-    color: "#AAAAAA",
+    color: "#FCF7F8",
     fontFamily: "Mada-Bold",
-    fontSize: 17,
+    fontSize: 16,
     lineHeight: 35,
   },
 
@@ -160,10 +160,10 @@ const styles = StyleSheet.create({
   },
 
   championDescription: {
-    fontFamily: "Mada-Regular",
+    fontFamily: "Mada-Bold",
     fontSize: 17,
     lineHeight: 35,
-    color: "#FCF7F8",
+    color: "#AAAAAA",
     textAlign: "left",
   },
 

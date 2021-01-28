@@ -1,5 +1,5 @@
 import React from "react";
-import FlashMessage from "react-native-flash-message";
+import Toast from "react-native-toast-message";
 
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
@@ -10,6 +10,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./src/redux/index";
 
 import AppStack from "./src/routes/AppStack";
+import { YellowBox } from "react-native";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -23,12 +24,19 @@ export default function App() {
   if (!fontsLoaded) {
     return <AppLoading />;
   }
+
+  YellowBox.ignoreWarnings(["Require cycle"]);
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <StatusBar style="light" />
         <AppStack />
-        <FlashMessage position="bottom" />
+        <Toast
+          ref={(ref) => Toast.setRef(ref)}
+          topOffset={50}
+          visibilityTime={400}
+        />
       </PersistGate>
     </Provider>
   );

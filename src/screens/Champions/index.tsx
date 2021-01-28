@@ -13,8 +13,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch, useSelector } from "react-redux";
 import { ApplicationState } from "../../redux";
 import { championRequest } from "../../redux/ducks/champions/actions";
-import { showMessage } from "react-native-flash-message";
 import Item from "./Item";
+import Toast from "react-native-toast-message";
 
 const { width, height } = Dimensions.get("window");
 
@@ -61,10 +61,9 @@ const Champions: React.FC = () => {
   }
 
   if (error.hasError) {
-    showMessage({
-      message: "Erro inesperado",
-      type: "danger",
-      duration: 1500,
+    Toast.show({
+      text1: "Erro inesperado",
+      type: "error",
     });
     return <View />;
   }
@@ -151,5 +150,7 @@ export const styles = StyleSheet.create({
     height: 120,
     width: 120,
     borderRadius: 120 / 2,
+    borderColor: "#D5BA66",
+    borderWidth: 0.2,
   },
 });
